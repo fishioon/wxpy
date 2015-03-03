@@ -16,41 +16,6 @@ import random
 
 TOKEN = "fishioon"
 
-g_result = [
-        '陪对方看喜欢的电影',
-        '让对方撒娇，直到对方亲你',
-        '特许你继续抽签2次', 
-        '用10种不同的方式赞美对方',
-        '让我咬一口',
-        '包一件家务一周',
-        '抱或者背对方走一圈',
-        '表演一段钢管舞',
-        '讲一段笑话',
-        '亲手为对方做一顿饭',
-        '请对方吃一顿大餐',
-        '罚酒一杯',
-        '给对方洗脚',
-        '喂对方吃饭',
-        '用扭腰写出对方要求的字',
-        '哄我睡觉',
-        '学猫猫卖萌，在对方身上撒娇',
-        '让对方深情的唱一首情歌',
-        '让对方当大马骑两分钟',
-        '替对方按摩',
-        '说99遍我爱你',
-        '严肃的说我是猪',
-        '让对方差遣一周',
-        '说出对方喜欢的，并买给TA',
-        '让对方咬一口 不许喊疼',
-        '吃掉对方身上的事物残渣',
-        '亲嘴10分钟',
-        '让对方彩排结婚',
-        '被对方挠痒痒不许躲',
-        '表白到对方点头愿意为止',
-        '告诉对方最近有木有干坏事',
-        '相互拥抱一下'
-        ]
-
 @csrf_exempt
 def wxapp(request):
     if request.method == "GET":
@@ -77,29 +42,31 @@ def check_signature(request):
     else:
         return "Check failed"
 
-def get_help_msg(result):
+def get_help_msg():
     msg = ("欢迎使用爱情上上签，为你的TA求支签!\n"
             "使用说明：输入'sj'返回求签结果\n"
             "目前已有的签如下：\n")
+    print Poll.objects.all()[0].name
+    print type(Poll.objects.all()[0].name)
+
     for i in range(0, len(Poll.objects.all())):
-        msg = msg + str(i+1) + ". " + Poll.objects.all()[i].name + "\n"
+        msg = msg + str(i+1) + ". " + Poll.objects.all()[i].name.encode('utf8') + "\n"
     return msg
 
 def reply_msg(request):
-    global g_result
     msg = parse_msg(request.body)
     req_data = msg['Content']
     data = ""
     if msg['MsgType'] == 'text' and req_data.lower() == 'sj':
         ranid = random.randint(0, len(Poll.objects.all())-1)
         p = Poll.objects.all()[ranid]
-        data = p.name
+        data = p.name.encode('utf8')
         p.votes += 1
         p.save()
         choice = Choice(poll=p, date=timezone.now())
         choice.save()
     else:
-        data = get_help_msg(g_result)
+        data = get_help_msg()
     return packet_msg(msg, data)
 
 def parse_msg(request_body):
