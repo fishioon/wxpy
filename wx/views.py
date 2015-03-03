@@ -58,9 +58,11 @@ def check_signature(request):
         return "Check failed"
 
 def get_help_msg(result):
-    msg = ""
+    msg = ("欢迎使用爱情上上签，为你的TA求支签!\n"
+            "使用说明：输入'sj'返回求签结果\n"
+            "目前已有的签如下：\n")
     for i in range(0, len(result)):
-        msg = msg + str(i) + ". " + result[i]
+        msg = msg + str(i) + ". " + result[i] + "\n"
     return msg
 
 def reply_msg(request):
