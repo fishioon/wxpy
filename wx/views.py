@@ -70,7 +70,7 @@ def reply_msg(request):
     msg = parse_msg(request.body)
     req_data = msg['Content']
     data = ""
-    if msg['MsgType'] == 'text' and req_data == 'sj':
+    if msg['MsgType'] == 'text' and req_data.lower() == 'sj':
         data = g_result[random.randint(0, len(g_result)-1)]
     else:
         data = get_help_msg(g_result)
