@@ -46,8 +46,6 @@ def get_help_msg():
     msg = ("欢迎使用爱情上上签，为你的TA求支签!\n"
             "使用说明：输入'sj'返回求签结果\n"
             "目前已有的签如下：\n")
-    print Poll.objects.all()[0].name
-    print type(Poll.objects.all()[0].name)
 
     for i in range(0, len(Poll.objects.all())):
         msg = msg + str(i+1) + ". " + Poll.objects.all()[i].name.encode('utf8') + "\n"
