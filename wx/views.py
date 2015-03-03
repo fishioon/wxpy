@@ -76,7 +76,7 @@ def get_help_msg(result):
             "使用说明：输入'sj'返回求签结果\n"
             "目前已有的签如下：\n")
     for i in range(0, len(result)):
-        msg = msg + str(i) + ". " + result[i] + "\n"
+        msg = msg + str(i+1) + ". " + result[i] + "\n"
     return msg
 
 def reply_msg(request):
