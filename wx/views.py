@@ -3,6 +3,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+
+from wx.models import Poll
+from wx.models import Choice
+from django.utils import timezone
 import xml.etree.ElementTree as ET
 
 import hashlib
@@ -42,7 +46,9 @@ g_result = [
         '亲嘴10分钟',
         '让对方彩排结婚',
         '被对方挠痒痒不许躲',
-        '表白到对方点头愿意为止'
+        '表白到对方点头愿意为止',
+        '告诉对方最近有木有干坏事',
+        '相互拥抱一下'
         ]
 
 @csrf_exempt
@@ -75,8 +81,8 @@ def get_help_msg(result):
     msg = ("欢迎使用爱情上上签，为你的TA求支签!\n"
             "使用说明：输入'sj'返回求签结果\n"
             "目前已有的签如下：\n")
-    for i in range(0, len(result)):
-        msg = msg + str(i+1) + ". " + result[i] + "\n"
+    for i in range(0, len(Poll.objects.all())):
+        msg = msg + str(i+1) + ". " + Poll.objects.all()[i].name + "\n"
     return msg
 
 def reply_msg(request):
@@ -85,7 +91,13 @@ def reply_msg(request):
     req_data = msg['Content']
     data = ""
     if msg['MsgType'] == 'text' and req_data.lower() == 'sj':
-        data = g_result[random.randint(0, len(g_result)-1)]
+        ranid = random.randint(0, len(Poll.objects.all())-1)
+        p = Poll.objects.all()[ranid]
+        data = p.name
+        p.votes += 1
+        p.save()
+        choice = Choice(poll=p, date=timezone.now())
+        choice.save()
     else:
         data = get_help_msg(g_result)
     return packet_msg(msg, data)
