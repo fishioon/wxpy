@@ -18,12 +18,17 @@ TOKEN = "fishioon"
 
 @csrf_exempt
 def wxapp(request):
-    if request.method == "GET":
+    if request.method == 'GET':
         return HttpResponse(check_signature(request))
-    elif request.method == "POST":
+    elif request.method == 'POST':
         return HttpResponse(reply_msg(request))
     else:
-        return HttpResponse("Not support http method") 
+        return HttpResponse('Not support http method') 
+
+def choice(request):
+    if request.method == 'GET':
+        context = {'choices' : Choice.objects.all()}
+        return render(request, 'wx/choices.html', context)
 
 def check_signature(request):
     global TOKEN
@@ -61,7 +66,7 @@ def reply_msg(request):
         data = p.name.encode('utf8')
         p.votes += 1
         p.save()
-        choice = Choice(poll=p, date=timezone.now())
+        choice = Choice(poll=p, user_id=msg['FromUserName'], date=timezone.now())
         choice.save()
     else:
         data = get_help_msg()

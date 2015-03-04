@@ -6,5 +6,6 @@ urlpatterns = patterns('',
     # url(r'^$', 'online.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^', views.wxapp),
+    url(r'^$', views.wxapp),
+    url(r'^choice/', views.choice),
 )

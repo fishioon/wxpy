@@ -1,0 +1,9 @@
+{% if choices %}
+    <ul>
+    {% for choice in choices%}
+    <li>{{ choice.user_id }} -- {{ choice.poll.name }} -- {{ choice.date }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
