@@ -19,11 +19,12 @@ TOKEN = "fishioon"
 @csrf_exempt
 def wxapp(request):
     if request.method == 'GET':
-        return HttpResponse(check_signature(request))
+        str = "success" if check_signature(request) else "failed"
+        return HttpResponse(str)
     elif request.method == 'POST':
         return HttpResponse(reply_msg(request))
     else:
-        return HttpResponse('Not support http method') 
+        return HttpResponse('Not support http method')
 
 def choice(request):
     if request.method == 'GET':
@@ -42,10 +43,7 @@ def check_signature(request):
     tmplist.sort()
     tmpstr = "%s%s%s" % tuple(tmplist)
     tmpstr = hashlib.sha1(tmpstr).hexdigest()
-    if tmpstr == signature:
-        return echostr
-    else:
-        return "Check failed"
+    return tmpstr == signature
 
 def get_help_msg():
     msg = ("欢迎使用爱情上上签，为你的TA求支签!\n"
@@ -82,7 +80,7 @@ def parse_msg(request_body):
 
 def packet_msg(msg, content):
     msg_template = '<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[%s]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>';
-    reply_msg = msg_template % (msg['FromUserName'], 
-            msg['ToUserName'], msg['CreateTime'], 
+    reply_msg = msg_template % (msg['FromUserName'],
+            msg['ToUserName'], msg['CreateTime'],
             msg['MsgType'], content)
     return reply_msg

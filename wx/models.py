@@ -10,5 +10,3 @@ class Choice(models.Model):
     user_id = models.CharField(max_length=256)
     poll = models.ForeignKey(Poll)
     date = models.DateTimeField()
-
-
