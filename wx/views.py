@@ -54,17 +54,18 @@ def get_help_msg():
         msg = msg + str(i+1) + ". " + Poll.objects.all()[i].name.encode('utf8') + "\n"
     return msg
 
-def random_poll():
+def random_poll(msg):
     ranid = random.randint(0, len(Poll.objects.all())-1)
     p = Poll.objects.all()[ranid]
+    content = p.name.encode('utf8')
     p.votes += 1
     p.save()
     choice = Choice(poll=p, user_id=msg['FromUserName'], date=timezone.now())
     choice.save()
-    return p.name.encode('utf8')
+    return content
 
-def random_joke():
-    return "笑话".encode('utf8')
+def random_joke(msg):
+    return "笑话"
 
 def reply_msg(request):
     msg = parse_msg(request.body)
@@ -72,9 +73,9 @@ def reply_msg(request):
     data = ""
     if msg['MsgType'] == 'text':
         if req_data.lower() == 'sj':
-            data = random_poll()
-        elif req_data.lower() == 'xh' or req_data.lower() == '笑话':
-            data = random_joke()
+            data = random_poll(msg)
+        elif req_data.lower() == 'xh':
+            data = random_joke(msg)
         else:
             data = get_help_msg()
     else:
