@@ -11,6 +11,7 @@ import xml.etree.ElementTree as ET
 
 import hashlib
 import random
+import requests
 
 # Create your views here.
 
@@ -46,12 +47,13 @@ def check_signature(request):
     return tmpstr == signature
 
 def get_help_msg():
-    msg = ("欢迎使用爱情上上签，为你的TA求支签!\n"
-            "使用说明：输入'sj'返回求签结果\n"
-            "目前已有的签如下：\n")
+    msg = (
+            "欢迎来到鱼塘，目前这片鱼塘已经被承包啦!\n"
+            "使用说明：输入'xh'返回随机返回一个笑话\n"
+            )
 
-    for i in range(0, len(Poll.objects.all())):
-        msg = msg + str(i+1) + ". " + Poll.objects.all()[i].name.encode('utf8') + "\n"
+    #for i in range(0, len(Poll.objects.all())):
+    #    msg = msg + str(i+1) + ". " + Poll.objects.all()[i].name.encode('utf8') + "\n"
     return msg
 
 def random_poll(msg):
@@ -64,8 +66,19 @@ def random_poll(msg):
     choice.save()
     return content
 
+# 获取知乎笑话精华中随机一个回答
 def random_joke(msg):
-    return "笑话"
+    page = random.randint(1, 20);
+    num = random.randint(0, 19);
+    url = "www.zhihu.com/topic/19563616/top-answers?page=%d" % (page);
+    r = requests.get(url, verify=False)
+    offset = 0
+    for inx in range(0, num):
+        offset = r.text.find("data-entry-url=", offset)
+        offset += len("data-entry-url=")
+    end_off = r.text.find(offset+1, "\"");
+    answer_url = "www.zhihu.com" + r.text[offset+1, end_off]
+    return answer_url
 
 def reply_msg(request):
     msg = parse_msg(request.body)
