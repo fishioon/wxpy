@@ -173,4 +173,4 @@ def packet_msg(msg, content):
     msg_template = '<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[%s]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>'
     reply_msg = msg_template % (
         msg.from_uid, msg.to_uid, msg.create_time, msg.type, content)
-return reply_msg
+    return reply_msg
