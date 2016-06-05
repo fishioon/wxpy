@@ -44,32 +44,6 @@ class WxMsg:
         return True
 
 
-class MarkObject:
-
-    def __init__(self, msg):
-        self.from_uid = ''
-        self.to_uid = ''
-        self.content = ''
-        self.type = ''
-        self.create_time = ''
-
-    def parse_msg(self, msg):
-        root = ET.fromstring(request_body)
-        if root.tag == 'xml':
-            for child in root:
-                if child.tag == 'FromUserName':
-                    self.from_uid = child.text
-                elif child.tag == 'ToUserName':
-                    self.to_uid = child.text
-                elif child.tag == 'Content':
-                    self.content = child.text
-                elif child.tag == 'MsgType':
-                    self.msg_type = child.text
-                elif child.tag == 'CreateTime':
-                    self.create_time = child.text
-        return True
-
-
 @csrf_exempt
 def wxapp(request):
     if request.method == 'GET':
@@ -154,7 +128,8 @@ def mark(msg):
 
 
 def reply_msg(request):
-    msg = WxMsg(request.body)
+    msg = WxMsg()
+    msg.parse_msg(request.body)
 
     if len(msg.content) == 2:
         tx = msg.content.low()
