@@ -132,7 +132,7 @@ def reply_msg(request):
     msg.parse_msg(request.body)
 
     if len(msg.content) == 2:
-        tx = msg.content.low()
+        tx = msg.content.lower()
         if tx == 'sj':
             data = random_poll(msg)
         elif tx == 'xh':
