@@ -117,13 +117,17 @@ def random_joke(msg):
 
 
 def mark(msg):
+    clen = len(msg.content)
+    if clen < 3:
+        return "您的mark好像有点问题，正确格式为#xxx#具体内容"
     index = -1
-    for i, ch in enumerate(msg.content):
+    for i in range(1, clen):
         if ch == '#' or ch == ' ':
             index = i
             break
     if index == -1:
         return "您的mark好像有点问题，正确格式为#xxx#具体内容"
+
     mark_type = msg.content[1:index]
     mark_detail = msg.content[index + 1:]
     mark = Mark(user_id=msg.from_uid,date=timezone.now(), type=mark_type, detail=mark_detail)
