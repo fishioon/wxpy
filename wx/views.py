@@ -117,7 +117,11 @@ def random_joke(msg):
 
 
 def mark(msg):
-    index = msg.content.find('#', 1)
+    index = -1
+    for i, ch in enumerate(msg.content):
+        if ch == '#' or ch == ' ':
+            index = i
+            break
     if index == -1:
         return "您的mark好像有点问题，正确格式为#xxx#具体内容"
     mark_type = msg.content[1:index]
