@@ -126,14 +126,20 @@ def mark(msg):
             index = i
             break
     if index == -1:
-        return "您的mark好像有点问题，正确格式为#xxx#具体内容"
+        return '您的mark好像有点问题，正确格式为#xxx#具体内容'
 
     mark_type = msg.content[1:index]
     mark_detail = msg.content[index + 1:]
     mark = Mark(user_id=msg.from_uid,date=timezone.now(), type=mark_type, detail=mark_detail)
     mark.save()
-    return mark_type + "success"
+    return mark_type + 'success'
 
+def wx_marks(msg):
+    marks = Mark.objects.order_by('date').filter('user_id'=msg.from_uid)[:3]
+    res = '最近3条打卡纪录\n'
+    for mk in marks:
+        res = '%s %s %s\n' %s (res, mk.type, mk.detail, mk.date)
+    return res
 
 def reply_msg(request):
     msg = WxMsg()
