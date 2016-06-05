@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from wx.models import Poll
 from wx.models import Choice
+from wx.models import Mark
 from django.utils import timezone
 import xml.etree.ElementTree as ET
 
@@ -121,8 +122,7 @@ def mark(msg):
         return "您的mark好像有点问题，正确格式为#xxx#具体内容"
     mark_type = msg.content[1:index]
     mark_detail = msg.content[index + 1:]
-    mark = Mark(user_id=msg.from_uid,
-                date=timezone.now(), type=mark_type, detail=mark_detail)
+    mark = Mark(user_id=msg.from_uid,date=timezone.now(), type=mark_type, detail=mark_detail)
     mark.save()
     return mark_type + "success"
 

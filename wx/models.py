@@ -14,5 +14,5 @@ class Choice(models.Model):
 class Mark(models.Model):
     user_id = models.CharField(max_length=256)
     type = models.CharField(max_length=256)
-    detail = models.TextField
-    date = models.DateTimeField
+    detail = models.TextField()
+    date = models.DateTimeField()
