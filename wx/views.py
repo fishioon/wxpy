@@ -27,8 +27,8 @@ class WxMsg:
         self.type = ''
         self.create_time = ''
 
-    def parse_msg(self, msg):
-        root = ET.fromstring(request_body)
+    def parse_msg(self, text):
+        root = ET.fromstring(text)
         if root.tag == 'xml':
             for child in root:
                 if child.tag == 'FromUserName':
